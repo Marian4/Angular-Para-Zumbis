@@ -1,0 +1,131 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+	<title>Vídeo 1</title>
+	<script type='application/javascript' src='angular.js'></script>
+</head>
+<body ng-app>
+{{1+1}}<br>
+{{'dois'}}
+</body>
+</html>-->
+<!--<!DOCTYPE html>
+<html>
+<head>
+	<title>Vídeo 2</title>
+	<script type='application/javascript' src='angular.js'></script>
+</head>
+<body ng-app>
+<label>nome</label>
+<input ng-model="nome"type="text" name="nome">
+<h1>Seu nome é {{nome}}</h1>
+</body>
+</html>-->
+<!--<!DOCTYPE html>
+<html>
+<head>
+	<title>Vídeo 3</title>
+	<script type='application/javascript' src='angular.js'></script>
+	<label>nome</label>
+	<input ng-model="nome" required type="text" ng-minlength='5' name="nome">
+	<button type="submit">enviar</button>
+	<label>CEP</label>
+	<input type="text" ng-model="cep" required ng-pattern="/^[0-9]{5}-[0-9]{3}$/" name="CEP" class="form-control">
+	<button type="submit">enviar</button>
+</head>
+<body ng-app>
+
+</body>
+</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vídeos:4 a 9</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type='application/javascript' src='angular.js'></script>
+	<script type='application/javascript' src='filters.js'></script>
+	<!--<script type='application/javascript' src='angular-routejs'></script>-->
+	<!--<script type='application/javascript' src='route.js'></script>-->
+	<script type="text/javascript">
+		var app = angular.module("app",['filters']);
+
+		app.controller("controller", function($scope){
+			$scope.ocorrencias = [];
+			$scope.adiciona=function(ocorrencia){
+				$scope.ocorrencias.push(angular.copy(ocorrencia));
+			};
+		});
+
+		app.directive('ngVerificaSubmit', function() {
+            return {
+                restrict: 'E',
+                require: '^form',
+                scope:{
+                	submit:'&',
+                },  
+                template:'<button type="submit" class="btn btn-primary">enviar</button>',
+                link: function($scope, $element, $attrs, formCtrl) {
+                    $element.on('click', function() {
+                        if (formCtrl.$valid) {
+                        	$scope.submit();
+                        }
+                        else {
+                            alert('Formulário inválido');
+                        }
+                    });
+                }
+            }   
+        });
+
+        app.directive('ngBlur', function() {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function($scope, $element, $attrs, ngModel) {
+                    $element.on('blur', function() {
+                        if (ngModel.$invalid) {
+                        	$element.addClass('error');
+                        }
+                        else {
+                            $element.removeClass('error');
+                        }
+                    });
+                }
+            }   
+        });
+	</script>
+	<style type="text/css">
+		.error{
+			border-color:red
+		}
+	</style>
+</head>
+<body ng-app="app">
+	<div class="well">
+		<h1>Pessoas</h1>
+	</div>
+	<div ng-controller="controller">
+		<table border=1 ng-if="ocorrencias.length > 0" class="table">
+			<thead>
+				<th>nome</th>
+				<th>cep</th>
+			</thead>
+			<tbody>
+				<tr ng-repeat="ocorrencia in ocorrencias">
+					<td>{{ocorrencia.nome|upper}}</td>
+					<td>{{ocorrencia.cep}}</td>
+				</tr>
+			</tbody>
+		</table><br>
+		<form name='dados'>
+			<label>nome</label>
+			<input ng-model="ocorrencia.nome" ng-blur required type="text" ng-minlength='5' name="nome" class="form-control">
+			<label>cep</label>
+			<input type="text" ng-blur ng-model="ocorrencia.cep" ng-pattern="/^[0-9]{5}-[0-9]{3}$/" required name="cep" class="form-control"><br>
+			<ng-verifica-submit submit="adiciona(ocorrencia)"></ng-verifica-submit>
+			<!--<button ng-click="adiciona(ocorrencia)" ng-disabled="dados.$invalid" type="submit" class="btn btn-primary">enviar</button>-->
+			<!--tirar o ng-disabled e colocar a condição de está válido na função adiciona(validação de controllers)-->
+		</form>
+	</div>
+</body>
+</html>
